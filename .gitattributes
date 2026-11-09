@@ -1,6 +1,7 @@
 # Normaliza fim de linha: blobs sempre LF (essencial para .sh em Linux)
 * text=auto eol=lf
 *.sh text eol=lf
+*.php text eol=lf
 *.zip binary
 *.png binary
 *.jpg binary

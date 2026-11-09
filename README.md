@@ -30,6 +30,15 @@ O script baixa o pacote certo direto das releases deste repositório, extrai, aj
 Obtenha sua chave de licença no link [NNetwork](https://portal.nnetwork.net/order/tools/licenca-xuione).
 Acesse o portal para gerar/consultar sua licença antes de instalar ou atualizar.
 
+## Patches de melhoria
+
+Correções aplicadas após a instalação, mantidas neste repositório:
+
+| Patch | Problema que resolve | Pasta |
+|---|---|---|
+| **Cloudflare Fix** | Login em loop / logout intermitente com o proxy Cloudflare ativo (Nginx vê IP do edge em vez do visitante). | [`patches/cloudflare-fix/`](patches/cloudflare-fix/README.md) — [English](patches/cloudflare-fix/README.md) · [Español](patches/cloudflare-fix/README.es.md) |
+| **EPG Instant Fix** | Stream fica até 24 h sem EPG após atribuir um canal, esperando o cron da meia-noite. | [`patches/epg-instant-fix/`](patches/epg-instant-fix/README.md) |
+
 ## Dicas para manter o painel estável e com bom desempenho
 
 Parar o painel:
