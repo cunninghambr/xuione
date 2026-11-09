@@ -32,7 +32,27 @@ Acesse o portal para gerar/consultar sua licença antes de instalar ou atualizar
 
 ## Patches de melhoria
 
-Correções aplicadas após a instalação, mantidas neste repositório:
+Correções aplicadas após a instalação, mantidas neste repositório. O instalador
+oferece os patches automaticamente ao final de cada `install`/`update`.
+
+Para aplicar (ou reaplicar) a qualquer momento:
+
+```bash
+wget -qO apply-patches.sh https://raw.githubusercontent.com/cunninghambr/xuione/main/apply-patches.sh ; chmod +x apply-patches.sh ; sudo ./apply-patches.sh
+```
+
+Ou por parâmetro:
+
+```bash
+sudo ./apply-patches.sh cloudflare   # fix de login atrás do Cloudflare
+sudo ./apply-patches.sh epg          # EPG na hora
+sudo ./apply-patches.sh all          # os dois
+sudo ./apply-patches.sh status       # só mostra o que já está aplicado
+```
+
+O script é idempotente (pode rodar quantas vezes quiser), faz backup em
+`/root/xui-patches-backup/` antes de alterar `nginx.conf` e valida a sintaxe do
+nginx antes de recarregar.
 
 | Patch | Problema que resolve | Pasta |
 |---|---|---|

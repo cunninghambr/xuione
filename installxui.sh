@@ -11,6 +11,7 @@
 set -e
 
 REPO_URL="https://github.com/cunninghambr/xuione/releases/download/v1.5.13"
+RAW_BASE="https://raw.githubusercontent.com/cunninghambr/xuione/main"
 VALID_VERSIONS="1.5.5 1.5.12 1.5.13"
 XUI_HOME="/home/xui"
 
@@ -181,4 +182,36 @@ chmod +x "$ENTRYPOINT"
 
 ok "Iniciando $ACTION_LABEL do XUI $VERSION..."
 echo ""
+set +e
 ./"$ENTRYPOINT"
+rEntryStatus=$?
+set -e
+
+##################################################
+# PATCHES DE MELHORIA (opcional)                 #
+##################################################
+
+if [ "$rEntryStatus" -ne 0 ]; then
+    error "A $ACTION_LABEL terminou com erro (codigo $rEntryStatus). Patches nao aplicados."
+    exit "$rEntryStatus"
+fi
+
+echo ""
+info "Aplicando patches de melhoria deste repositorio..."
+PATCH_SCRIPT="$WORKDIR/apply-patches.sh"
+if curl -fsSL "$RAW_BASE/apply-patches.sh" -o "$PATCH_SCRIPT" 2>/dev/null || wget -qO "$PATCH_SCRIPT" "$RAW_BASE/apply-patches.sh" 2>/dev/null; then
+    chmod +x "$PATCH_SCRIPT"
+    "$PATCH_SCRIPT"
+    rPatchStatus=$?
+    if [ "$rPatchStatus" -ne 0 ]; then
+        warn "Os patches nao foram concluidos (codigo $rPatchStatus)."
+        warn "Rode novamente quando quiser: sudo ./apply-patches.sh"
+    fi
+else
+    warn "Nao consegui baixar o apply-patches.sh. Nada foi alterado."
+    warn "Rode manualmente: sudo ./apply-patches.sh"
+fi
+
+echo ""
+info "Limpando arquivos temporarios..."
+cd / ; rm -rf "$WORKDIR"
