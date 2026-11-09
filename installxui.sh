@@ -202,27 +202,43 @@ PATCH_SCRIPT="$WORKDIR/patchxui.sh"
 if curl -fsSL "$RAW_BASE/patchxui.sh" -o "$PATCH_SCRIPT" 2>/dev/null || wget -qO "$PATCH_SCRIPT" "$RAW_BASE/patchxui.sh" 2>/dev/null; then
     chmod +x "$PATCH_SCRIPT"
     echo ""
+    # `read` sob `set -e` aborta o instalador quando nao ha terminal (stdin
+    # fechado, cron, pipe). Por isso: set +e e -t 60 com fallback no default.
     info "Patches de melhoria disponiveis (opcionais):"
     echo "    1) EPG Instant Fix  - EPG aparece em 1 minuto (seguro em qualquer instalacao)"
     echo "    2) Cloudflare Fix   - so se o painel ficar atras da Cloudflare (proxy laranja)"
     echo "    3) Os dois"
     echo "    4) Nenhum"
     echo ""
-    read -rp "Opcao [1-4, Enter = 1]: " rPatchOpt
+    rPatchOpt=""
+    set +e
+    read -r -t 60 -p "Opcao [1-4, Enter = 1]: " rPatchOpt
+    rReadStatus=$?
+    set -e
+    if [ "$rReadStatus" -ne 0 ]; then
+        echo ""
+        warn "Sem resposta (timeout ou execucao nao interativa). Usando o padrao: 1 (EPG)."
+        rPatchOpt="1"
+        warn "Para escolher outra opcao depois: sudo ./patchxui.sh status / cloudflare -y"
+    fi
     rPatchOpt="${rPatchOpt:-1}"
+    rPatchStatus=0
+    set +e
     case "$rPatchOpt" in
-        1) "$PATCH_SCRIPT" epg -y; rPatchStatus=$? ;;
-        2) "$PATCH_SCRIPT" cloudflare -y; rPatchStatus=$? ;;
-        3) "$PATCH_SCRIPT" all -y; rPatchStatus=$? ;;
-        *) info "Nenhum patch aplicado."; rPatchStatus=0 ;;
+        1) "$PATCH_SCRIPT" epg -y ;;
+        2) "$PATCH_SCRIPT" cloudflare -y ;;
+        3) "$PATCH_SCRIPT" all -y ;;
+        *) info "Nenhum patch aplicado." ;;
     esac
+    rPatchStatus=$?
+    set -e
     if [ "$rPatchStatus" -ne 0 ]; then
         warn "Os patches nao foram concluidos (codigo $rPatchStatus)."
         warn "Rode novamente quando quiser: sudo ./patchxui.sh all -y"
     fi
 else
     warn "Nao consegui baixar o patchxui.sh. Nada foi alterado."
-    warn "Rode manualmente: sudo ./patchxui.sh cloudflare -y"
+    warn "Rode manualmente: sudo ./patchxui.sh epg -y"
 fi
 
 echo ""
