@@ -33,26 +33,32 @@ Acesse o portal para gerar/consultar sua licença antes de instalar ou atualizar
 ## Patches de melhoria
 
 Correções aplicadas após a instalação, mantidas neste repositório. O instalador
-oferece os patches automaticamente ao final de cada `install`/`update`.
+oferece os patches ao final de cada `install`/`update` (perguntando quais aplicar).
 
 Para aplicar (ou reaplicar) a qualquer momento:
 
 ```bash
-wget -qO apply-patches.sh https://raw.githubusercontent.com/cunninghambr/xuione/main/apply-patches.sh ; chmod +x apply-patches.sh ; sudo ./apply-patches.sh
+wget -qO patchxui.sh https://raw.githubusercontent.com/cunninghambr/xuione/main/patchxui.sh ; chmod +x patchxui.sh ; sudo ./patchxui.sh all -y
 ```
 
 Ou por parâmetro:
 
 ```bash
-sudo ./apply-patches.sh cloudflare   # fix de login atrás do Cloudflare
-sudo ./apply-patches.sh epg          # EPG na hora
-sudo ./apply-patches.sh all          # os dois
-sudo ./apply-patches.sh status       # só mostra o que já está aplicado
+sudo ./patchxui.sh status            # mostra o que já está aplicado
+sudo ./patchxui.sh epg -y            # EPG na hora
+sudo ./patchxui.sh cloudflare -y     # fix de login atrás do Cloudflare
+sudo ./patchxui.sh all -y            # os dois
+DRY_RUN=1 sudo ./patchxui.sh all     # simula, sem alterar nada
 ```
 
-O script é idempotente (pode rodar quantas vezes quiser), faz backup em
-`/root/xui-patches-backup/` antes de alterar `nginx.conf` e valida a sintaxe do
-nginx antes de recarregar.
+O script é idempotente (pode rodar quantas vezes quiser), faz backup do
+`nginx.conf` antes de alterar e valida a configuração do nginx antes de recarregar.
+As faixas de IP da Cloudflare são baixadas ao vivo da API oficial.
+
+> **Atenção:** o Cloudflare Fix liga o modo CDN no banco
+> (`cloudflare=1`, `allow_cdn_access=1`). Use apenas se o painel realmente
+> estiver atrás do proxy Cloudflare — caso contrário o `root_signals.php`
+> esvazia o `realip_cloudflare.conf` e você fica com o modo CDN ligado sem uso.
 
 | Patch | Problema que resolve | Pasta |
 |---|---|---|

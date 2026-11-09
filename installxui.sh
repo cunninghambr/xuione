@@ -198,18 +198,31 @@ fi
 
 echo ""
 info "Aplicando patches de melhoria deste repositorio..."
-PATCH_SCRIPT="$WORKDIR/apply-patches.sh"
-if curl -fsSL "$RAW_BASE/apply-patches.sh" -o "$PATCH_SCRIPT" 2>/dev/null || wget -qO "$PATCH_SCRIPT" "$RAW_BASE/apply-patches.sh" 2>/dev/null; then
+PATCH_SCRIPT="$WORKDIR/patchxui.sh"
+if curl -fsSL "$RAW_BASE/patchxui.sh" -o "$PATCH_SCRIPT" 2>/dev/null || wget -qO "$PATCH_SCRIPT" "$RAW_BASE/patchxui.sh" 2>/dev/null; then
     chmod +x "$PATCH_SCRIPT"
-    "$PATCH_SCRIPT"
-    rPatchStatus=$?
+    echo ""
+    info "Patches de melhoria disponiveis (opcionais):"
+    echo "    1) EPG Instant Fix  - EPG aparece em 1 minuto (seguro em qualquer instalacao)"
+    echo "    2) Cloudflare Fix   - so se o painel ficar atras da Cloudflare (proxy laranja)"
+    echo "    3) Os dois"
+    echo "    4) Nenhum"
+    echo ""
+    read -rp "Opcao [1-4, Enter = 1]: " rPatchOpt
+    rPatchOpt="${rPatchOpt:-1}"
+    case "$rPatchOpt" in
+        1) "$PATCH_SCRIPT" epg -y; rPatchStatus=$? ;;
+        2) "$PATCH_SCRIPT" cloudflare -y; rPatchStatus=$? ;;
+        3) "$PATCH_SCRIPT" all -y; rPatchStatus=$? ;;
+        *) info "Nenhum patch aplicado."; rPatchStatus=0 ;;
+    esac
     if [ "$rPatchStatus" -ne 0 ]; then
         warn "Os patches nao foram concluidos (codigo $rPatchStatus)."
-        warn "Rode novamente quando quiser: sudo ./apply-patches.sh"
+        warn "Rode novamente quando quiser: sudo ./patchxui.sh all -y"
     fi
 else
-    warn "Nao consegui baixar o apply-patches.sh. Nada foi alterado."
-    warn "Rode manualmente: sudo ./apply-patches.sh"
+    warn "Nao consegui baixar o patchxui.sh. Nada foi alterado."
+    warn "Rode manualmente: sudo ./patchxui.sh cloudflare -y"
 fi
 
 echo ""
