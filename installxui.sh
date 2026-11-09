@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # XUI ONE - Instalador/Atualizador
-# https://github.com/Nilbertocs/xuione
+# https://github.com/cunninghambr/xuione
 #
 # Uso:
 #   ./installxui.sh                  (abre menu interativo)
@@ -10,7 +10,7 @@
 #
 set -e
 
-REPO_URL="https://github.com/Nilbertocs/xuione/releases/download/v1.5.13"
+REPO_URL="https://github.com/cunninghambr/xuione/releases/download/v1.5.13"
 VALID_VERSIONS="1.5.5 1.5.12 1.5.13"
 XUI_HOME="/home/xui"
 
@@ -32,7 +32,7 @@ banner() {
     echo ""
     echo -e "${C_CYAN}===============================================${C_RESET}"
     echo -e "${C_CYAN}   Bem-vindo ao Instalador XUI ONE${C_RESET}"
-    echo -e "${C_CYAN}   github.com/Nilbertocs/xuione${C_RESET}"
+    echo -e "${C_CYAN}   github.com/cunninghambr/xuione${C_RESET}"
     echo -e "${C_CYAN}===============================================${C_RESET}"
     echo ""
 }
