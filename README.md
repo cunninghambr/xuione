@@ -1,7 +1,6 @@
 # XUI One
 
-Instruções de instalação e atualização do painel XUI (20.04-24.04).
-
+Instruções de instalação e atualização do painel XUI (Ubuntu 20.04–24.04).
 
 ## Instalação rápida (recomendado)
 
@@ -24,7 +23,7 @@ sudo ./installxui.sh install 1.5.13
 sudo ./installxui.sh update 1.5.13
 ```
 
-O script baixa o pacote certo direto desta release, extrai, ajusta as permissões e executa o `install`/`update` automaticamente. Precisa ser executado como root. Tanto o `install` quanto o `update` vão pedir a chave de licença durante a execução.
+O script baixa o pacote certo direto das releases deste repositório, extrai, ajusta as permissões e executa o `install`/`update` automaticamente. Precisa ser executado como root. Tanto o `install` quanto o `update` vão pedir a chave de licença durante a execução.
 
 ## Licença
 

@@ -2,3 +2,6 @@ adaptado 22.04-24.04/
 adaptado final 22.04-24.04/
 only 20.04/
 suport 24.04/
+
+# pacotes locais usados para montar as releases (nao versionar)
+release-assets/
